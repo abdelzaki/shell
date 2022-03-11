@@ -1,0 +1,159 @@
+
+- file should start with #!/bin/sh
+
+- Regex in shell follows Posix Standard
+
+- grep:General regular expression print
+	- it prints the matched line that means THE WHOLE LINE 
+	- ex: ls /user/bin | grep  zip -> it will print all lines which has the value zip
+	- it can has options such as grep -i  to ignore case senstivty or grep -v to negate match
+	- meta_charchter in grep:
+		. -> it will match any character ex: 
+			grep -e ".*mhx" file.txt means will match a.mhx bmhx
+			grep -e ".\.mhx" file.txt means will match only a.mhx because we escaped . by backslash which means it should a dot character so the expression is "anyOneCharacter.mhx"
+
+		$ -> end with ex:
+			grep -e "\.mhx$" # matches .mhx
+		^ -> starts which only when there is no bracket
+		^ -> inside [] means except [^"] -> except "
+		ex:
+			grep -e "^(ab|cd|ed)" file.txt means any thing which "sarts" with ac or cd or ed
+			grep  -e "^ab|cd|ed" file.txt  means any thins starts with ac or "contians" cd or ed
+
+		? -> option matches one  or more occurence ex:
+			grep -e "\(?1\)?" means is the () as options it matches (1), (1, 1 and  1) 
+
+		* -> zero or many occurence 
+
+		+ -> at least one occurence 
+
+		() -> is grouping the condition 
+
+		[] -> range which interperter as "ONE" character ex:
+			grep [0-9] means matches only one digit
+			grep [0-9]*  means matches as many number as possible
+			
+		good ex:
+			-md5_calc=`md5sum ${FILE_NAME} | grep -Eo '^[^ ]+'` -> get whats inside the file until u find white space
+		
+		if [[ $x == /fw* ]]  -> u can test part of the string using wild card
+		
+		
+		
+		head:
+			command=`cat ./md5.txt | grep -Eo '^[0-9][0-9]' | tail -1 `  -> grep would get more than one line by using the tail command u can tell which line u are interested in
+			echo "$command"
+		
+
+- read files:
+	z=$(< temp.txt) -> save the value in the file temp.txt in z
+
+- read line by line from file:
+	cat ./file.txt | while read LINE
+		do
+			echo $LINE
+		done
+
+- another way:
+	filter=`cat "$file1.txt"`
+	for TOKEN in `echo "$filter" ` | awk ' {print $1}' ; do
+	done
+		
+
+- tar
+	- tar -C foldertoextractat -x file.tgz means extract because it is x and -C means extract in this location
+		-C => capital c means change directory 
+	
+	small c means create zip file
+		
+	tar -C "directory to go to" -cvfz "filetoCreate" "from what" 
+	
+	tar -C /root/file -cvpzf "file.tg.pz" ./
+
+	tar -C foldertoextractat -x file.tgz -> extract because it is x and -c means extract in this location
+
+	tar -xzvf file.tar.gz -> x=> extract file, z=> for file which is .gz , v => show progress, f=> file name
+
+- delete folder recursively:
+	rm -rf -> remove recursively and force 		
+		
+- sed: streams editor
+	it takes -e option for exdtended regualr expressions ex:
+	ex:
+		sed -e 's/^[ /t]//' file.txt # remove any space or tap in front of the file 
+
+	it takes -i for changing in place ex:
+	ex:
+		sed -i 's/low/high/' file.txt #change low with high 
+
+	it can takes number for matching address in each line ex:
+		sed -i '2s/low/high/' file.txt #changes the second match in every line
+
+	it can change every match 
+		sed -i 's/low/high/g' #by using g which means global matches
+
+	to get the matches regular expression using sed:
+	ex:	
+		x= sed -e 's/.*file="\([^"]\)/\1/' # get the matches values of () in x --> very very very imprtant before this step should only one line avaliable you should filter the text before this point
+	
+- awk: 
+	awk -F ':' 'print $1' file.txt #print first colum which is septerted by :
+	
+	using awk to print the second matched line ex:
+	ex:
+		awk 'file/{i++}i==2/' file.txt
+
+
+- string matching short and long match
+
+	string1='folder1/folder2/folder3/f.txt'
+
+	longestleft=${string1##*/} # longest path from left will get f.txt
+
+	shortestleft=${string1#*/}  #shortest path from right will get folder2/folder3/f.txt
+
+	rightmatch=${longestleft%%*.} #  git folder name . is only a dot u can exchange it with / to work with folder
+
+	${file%/*} -> remove the file and get only the folder name 
+
+	basebame -> get only the name of the file
+
+
+- If statment in Bash
+
+	if[-n "$1"]; then  -> is true when the string is not NULL
+
+	if[-z "$1"]; then  -> is true when the string is  NULL
+
+	if[-f "$1"]; then  -> test if it is a file
+
+	if[-d "$1"]; then  -> test if it is a folder
+
+	if[-e "$1"]; then  -> test if it exists
+	
+
+- return from file to bash
+
+	$? -> what has the last command returned ex: u excute .c file and want to know what the file returned 
+
+	$! -> the PID of the last executed script in Backgroud using &
+
+	x = $(file.c >> file.txt) -> x whould be what have sent printf.
+
+- to redirect the error u can use 2>&1
+	cat file > file2 2>&1
+
+- to make a device u can use mknod command 
+	mknod /dev/chardevicetest c 8 1 // u create a character device which has a majpr numbher of 8 abnd minor number of 1 
+
+- to execute shell inside another shell u can always uses "source" command the idea behind source is that shell copy the file to the other file which means all the variabe in the under file are seen from the first file	
+	source test.sh  
+	. test.sh . is alias to source 
+
+- to assign a default value to variable if the variable doesnot exit 
+	mode=${1:-start} # if the first argument doesnot exit assign start to mode
+
+
+	
+- tricks:
+	-> to know the folder struture : ls -ld $(find .)
