@@ -121,15 +121,15 @@
 
 - If statment in Bash
 
-	if[-n "$1"]; then  -> is true when the string is not NULL
+	if[ -n "$1" ]; then  -> is true when the string is not NULL
 
-	if[-z "$1"]; then  -> is true when the string is  NULL
+	if[ -z "$1" ]; then  -> is true when the string is  NULL
 
-	if[-f "$1"]; then  -> test if it is a file
+	if[ -f "$1" ]; then  -> test if it is a file
 
-	if[-d "$1"]; then  -> test if it is a folder
+	if[ -d "$1" ]; then  -> test if it is a folder
 
-	if[-e "$1"]; then  -> test if it exists
+	if[ -e "$1" ]; then  -> test if it exists
 	
 
 - return from file to bash
@@ -153,7 +153,21 @@
 - to assign a default value to variable if the variable doesnot exit 
 	mode=${1:-start} # if the first argument doesnot exit assign start to mode
 
+- mount driver mount_point
+	- mount command can know the type of the file system 
 
+- or "|" condition in shell execute if before or was false we can use it to implement serial operation in case of failure
+	- do somthing | exit 1 
+
+- watch:
+	it is used to make the command execute in inteveral 
+	watch -n 5 "nameofscript" > /dev/null & 
+
+- dd:
+	- it is used to copy file from input to output 
+	- dd if=input_file of=output_file bs=block_size count=how_many_block
 	
 - tricks:
 	-> to know the folder struture : ls -ld $(find .)
+
+- 	hardwareVersion=`cat ${path2}vthw.txt | grep " .*1:${i}.*0x\([0-9a-zA-Z]*\)" | sed -e 's/^[ \t]*//' | sed "s/.*1:${i}.*0x\([0-9a-zA-Z]*\)/\1/"`
